@@ -1,0 +1,24 @@
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+#outlineContainer {
+    z-index: 1;
+    position: absolute;
+    overflow: hidden;
+    top: 0px;
+    right: 0px;
+    width: 160px;
+    height: 120px;
+    background: transparent;
+    border-style: solid;
+    border-color: lightgray;
+}
+
+div.mxWindowPane img {
+    cursor: pointer;
+}
