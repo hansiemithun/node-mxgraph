@@ -325,27 +325,9 @@ function plotVertices(graph) {
       return sourceParentCell == target ? false : null;
     };
 
-    mxConnectionHandler.prototype.connect = function(
-      source,
-      target,
-      evt,
-      dropTarget
-    ) {
-      var sourceParentCell = getParentCell(source);
-      if (sourceParentCell !== target) {
-        graph.getModel().beginUpdate();
-        try {
-          let sourceCopy = source.clone();
-          var edges = graph.getEdgesBetween(sourceParentCell, sourceCopy);
-          _.each(edges, edge => {
-            graph.getModel().remove(edge);
-          });
-          graph.removeCells([source]);
-          graph.insertEdge(parent, null, '', target, sourceCopy);
-        } finally {
-          graph.getModel().endUpdate();
-        }
-      }
+    mxConnectionHandler.prototype.connect = function(source, target) {
+      const nodeData = hierarchialData(graph, source);
+      drawNodes(graph, nodeData, target, source);
     };
   }
   // Gets the default parent for inserting new cells. This
@@ -357,6 +339,21 @@ function plotVertices(graph) {
     var parent = graph.getDefaultParent();
     console.log('apiData => ', JSON.stringify(apiData));
     createVertex(graph, w, parent, apiData);
+  } finally {
+    // Updates the display
+    graph.getModel().endUpdate();
+  }
+}
+
+function drawNodes(graph, data, parentNode = '', clearCell = false) {
+  graph.getModel().beginUpdate();
+  try {
+    if (clearCell) {
+      deleteSubtree(graph, clearCell);
+    }
+    var w = graph.container.offsetWidth;
+    var parent = graph.getDefaultParent();
+    createVertex(graph, w, parent, data, parentNode);
   } finally {
     // Updates the display
     graph.getModel().endUpdate();
